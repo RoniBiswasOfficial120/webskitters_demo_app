@@ -1,12 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import { Provider } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PersistGate } from "redux-persist/integration/react";
 import {
   persistor,
   store,
-  useAppDispatch,
   useAppSelector,
 } from "./src/appConfig/redux";
 import { StyleSheet, View } from "react-native";
@@ -16,6 +14,18 @@ import {
   PrivateRouteConstants,
   PublicRouteConstants,
 } from "./src/appConfig/route/routeConstants";
+import * as firebase from "@react-native-firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4nesYr8QSKnihZ8T8c2zyoePJO0TXbog",
+  authDomain: "webskitter-demo-app.firebaseapp.com",
+  projectId: "webskitter-demo-app",
+  appId: "1:267439912763:ios:fcb4429869c50af637a91e",
+};
+
+if (!firebase?.apps?.length) {
+  firebase?.initializeApp(firebaseConfig);
+}
 
 const App = () => {
   return (
@@ -31,15 +41,18 @@ const App = () => {
 
 const AppConfig = () => {
   const Stack = createNativeStackNavigator();
-  const state = useAppSelector((state) => state.userData);
-  const authStatus = useAppSelector((state: any) => state.userData.auth);
-  useEffect(() => {});
+  const userName = useAppSelector(
+    (state: any) => state.userData.activeUserName
+  );
+  const userEmail = useAppSelector(
+    (state: any) => state.userData.activeUserEmail
+  );
 
   return (
     <View style={styles.mainContainer}>
       <NavigationContainer>
         <Stack.Navigator>
-          {authStatus
+          {userName && userEmail
             ? PrivateRouteConstants.map((route, index) => {
                 return (
                   <Stack.Screen

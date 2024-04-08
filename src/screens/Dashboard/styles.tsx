@@ -16,7 +16,7 @@ const useStyles = (_height: number, _width: number) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor:"#00000080"
+      backgroundColor: "#00000080",
     },
     mainContainer: {
       height: "100%",
@@ -30,7 +30,7 @@ const useStyles = (_height: number, _width: number) =>
       height: 50,
       width: "100%",
       paddingHorizontal: 10,
-      backgroundColor: styleConstants.color.background_default,
+      backgroundColor: "black",
       flexDirection: "row",
       display: "flex",
       justifyContent: "space-between",
@@ -42,7 +42,6 @@ const useStyles = (_height: number, _width: number) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "blue",
       paddingHorizontal: 10,
       width: "100%",
     },
@@ -62,6 +61,7 @@ const useStyles = (_height: number, _width: number) =>
       shadowOpacity: 0.5,
       backgroundColor: "#ccacf2",
       elevation: 1,
+      marginTop: 50,
     },
     buttonStyle: {
       padding: 8,
@@ -76,6 +76,12 @@ const useStyles = (_height: number, _width: number) =>
       fontWeight: "600",
       fontSize: 12,
       color: "white",
+    },
+    textStyle: {
+      fontSize: 14,
+      fontWeight: "600",
+      textTransform: "capitalize",
+      color:"white"
     },
   });
 

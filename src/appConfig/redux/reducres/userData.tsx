@@ -1,38 +1,34 @@
 import {
   interfaceReduxAction,
-  interfaceUserData,
+  interfaceActiveUser,
 } from "../../TypescriptInterfaces/redux_interfaces";
 
-const initialUserData: interfaceUserData = {
-  auth: false,
-  list: [],
+const initialUserData: interfaceActiveUser = {
+  activeUserName: "",
+  activeUserEmail: "",
 };
 
 const userData = (
-  state: interfaceUserData = initialUserData,
+  state: interfaceActiveUser = initialUserData,
   action: interfaceReduxAction
 ) => {
   switch (action.type) {
-    case "setCreateUser":
+    case "setActiveUserName":
       return {
         ...state,
-        list: [
-          ...state.list,
-          {
-            name: action.payload.name,
-            email: action.payload.email,
-            password: action.payload.password,
-            productList: [],
-          },
-        ],
-        auth: true,
+        activeUserName: action.payload,
+      };
+    case "setActiveUserEmail":
+      return {
+        ...state,
+        activeUserEmail: action.payload,
       };
     case "setLogout":
       return {
         ...state,
-        auth: false,
+        activeUserName: "",
+        activeUserEmail: "",
       };
-
     default:
       return state;
   }

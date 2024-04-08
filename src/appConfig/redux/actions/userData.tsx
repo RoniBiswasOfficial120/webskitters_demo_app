@@ -1,14 +1,19 @@
-import { interfaceUserList } from "../../TypescriptInterfaces/redux_interfaces";
-
-export const setCreateUser = (val: interfaceUserList) => {
+export const setLogout = () => {
   return {
-    type: "setCreateUser",
+    type: "setLogout",
+  };
+};
+
+export const setActiveUserName = (val: string) => {
+  return {
+    type: "setActiveUserName",
     payload: val,
   };
 };
 
-export const setLogout = () => {
+export const setActiveUserEmail = (val: string) => {
   return {
-    type: "setLogout",
+    type: "setActiveUserEmail",
+    payload: val,
   };
 };
