@@ -11,11 +11,11 @@ import useStyles from "./styles";
 import { filterProductList } from "../../appConfig/utils";
 import { useAppDispatch, useAppSelector } from "../../appConfig/redux";
 import { setLogout } from "../../appConfig/redux/actions/userData";
-import firestore from "@react-native-firebase/firestore";
 import AddProductPopup from "../../components/AddProductPopup";
 import EditProductPopup from "../../components/EditProductPopup";
 import DataRow from "./DataRow";
 import DeleteProductPopup from "../../components/DeleteProductPopup";
+import { getProductList } from "../../appConfig/firebase/firebaseApiCalls";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -33,23 +33,17 @@ const Dashboard = () => {
   });
   const [enableDeletePopup, setEnableDeletePopup] = useState(false);
   const [selectedDocId, setSelectedDocId] = useState("");
-
   const [productList, setProductList] = useState([]);
 
   const userEmail = useAppSelector((state) => state?.userData?.activeUserEmail);
   const userName = useAppSelector((state) => state?.userData?.activeUserName);
 
   useEffect(() => {
-    const getProductList = async () => {
-      let allProductList: any = [];
-      const snapshot = await firestore().collection("product_list").get();
-      allProductList = snapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc?.id };
-      });
-      setProductList(filterProductList(userEmail, allProductList));
+    const getList = async () => {
+      const list = filterProductList(userEmail, await getProductList());
+      setProductList(list);
     };
-
-    getProductList();
+    getList();
   }, [enableAddPopup, enableEditPopup, enableDeletePopup]);
 
   return (

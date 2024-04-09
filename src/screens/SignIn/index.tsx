@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
-  Button,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   Text,
-  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -17,14 +15,8 @@ import CustomTextbox from "../../components/CustomTextBox";
 import { useNavigation } from "@react-navigation/core";
 import PathConstants from "../../appConfig/route/pathConstants";
 import { Nav } from "../../appConfig/TypescriptInterfaces/common_interfaces";
-import { findUserDetails, handleDataValidation } from "../../appConfig/utils";
-import { useAppDispatch, useAppSelector } from "../../appConfig/redux";
-import Toast from "react-native-toast-message";
-import firestore from "@react-native-firebase/firestore";
-import {
-  setActiveUserEmail,
-  setActiveUserName,
-} from "../../appConfig/redux/actions/userData";
+import { useAppDispatch } from "../../appConfig/redux";
+import callSigninApi from "../../appConfig/redux/thunk/callSigninApi";
 
 const SignIn = () => {
   const { height, width } = useWindowDimensions();
@@ -41,7 +33,7 @@ const SignIn = () => {
     password: "",
   });
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     const validationData = [
       {
         label: "Email Id",
@@ -56,23 +48,12 @@ const SignIn = () => {
         errorName: "password",
       },
     ];
-    if (!handleDataValidation(validationData, errorList, setErrorList)) {
-      let userList: any = [];
-      const snapshot = await firestore().collection("user_list").get();
-      userList = snapshot.docs.map((doc) => doc.data());
-
-      const userDetails = findUserDetails(email, password, userList);
-
-      if (userDetails.email !== "" && userDetails.name !== "") {
-        dispatch(setActiveUserName(userDetails.name));
-        dispatch(setActiveUserEmail(userDetails.email));
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Email Doesn't found!! Pease sign up.",
-        });
-      }
-    }
+    dispatch(
+      callSigninApi(validationData, errorList, setErrorList, {
+        email: email,
+        password: password,
+      })
+    );
   };
 
   return (

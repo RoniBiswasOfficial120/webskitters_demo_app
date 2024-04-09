@@ -15,15 +15,8 @@ import CustomTextbox from "../../components/CustomTextBox";
 import { useNavigation } from "@react-navigation/core";
 import PathConstants from "../../appConfig/route/pathConstants";
 import { Nav } from "../../appConfig/TypescriptInterfaces/common_interfaces";
-import { findUserDetails, handleDataValidation } from "../../appConfig/utils";
-import { useAppSelector } from "../../appConfig/redux";
-import { useDispatch } from "react-redux";
-import firestore from "@react-native-firebase/firestore";
-import Toast from "react-native-toast-message";
-import {
-  setActiveUserEmail,
-  setActiveUserName,
-} from "../../appConfig/redux/actions/userData";
+import callSignupApi from "../../appConfig/redux/thunk/callSignupApi";
+import { useAppDispatch } from "../../appConfig/redux";
 
 const SignIn = () => {
   const { height, width } = useWindowDimensions();
@@ -39,9 +32,9 @@ const SignIn = () => {
   });
 
   const navigation = useNavigation<Nav>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     const validationData = [
       {
         label: "Name",
@@ -62,25 +55,13 @@ const SignIn = () => {
         errorName: "password",
       },
     ];
-    if (!handleDataValidation(validationData, errorList, setErrorList)) {
-      let userList: any = [];
-      const snapshot = await firestore().collection("user_list").get();
-      userList = snapshot.docs.map((doc) => doc.data());
-
-      const userDetails = findUserDetails(email, password, userList);
-      if (userDetails.email === "" && userDetails.name === "") {
-        firestore()
-          .collection("user_list")
-          .add({ email: email, name: name, pass: password });
-        dispatch(setActiveUserName(name));
-        dispatch(setActiveUserEmail(email));
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Email found!! Pease sign in.",
-        });
-      }
-    }
+    dispatch(
+      callSignupApi(validationData, errorList, setErrorList, {
+        email: email,
+        password: password,
+        name: name,
+      })
+    );
   };
 
   return (

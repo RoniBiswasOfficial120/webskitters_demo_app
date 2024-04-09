@@ -68,6 +68,8 @@ export const handleDataValidation = (
 };
 
 export const findUserDetails = (email: string, password: string, list: any) => {
+  console.log("email-----------------",email,"password",password,"list",list);
+  
   let foundName = "";
   let foundEmail = "";
 

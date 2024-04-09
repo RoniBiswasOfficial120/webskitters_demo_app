@@ -2,11 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PersistGate } from "redux-persist/integration/react";
-import {
-  persistor,
-  store,
-  useAppSelector,
-} from "./src/appConfig/redux";
+import { persistor, store, useAppSelector } from "./src/appConfig/redux";
 import { StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,18 +10,7 @@ import {
   PrivateRouteConstants,
   PublicRouteConstants,
 } from "./src/appConfig/route/routeConstants";
-import * as firebase from "@react-native-firebase/app";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD4nesYr8QSKnihZ8T8c2zyoePJO0TXbog",
-  authDomain: "webskitter-demo-app.firebaseapp.com",
-  projectId: "webskitter-demo-app",
-  appId: "1:267439912763:ios:fcb4429869c50af637a91e",
-};
-
-if (!firebase?.apps?.length) {
-  firebase?.initializeApp(firebaseConfig);
-}
+import "./src/appConfig/firebase/config";
 
 const App = () => {
   return (
