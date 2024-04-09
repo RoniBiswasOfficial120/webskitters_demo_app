@@ -106,7 +106,7 @@ const Dashboard = () => {
       {enableDeletePopup && (
         <DeleteProductPopup
           docId={selectedDocId}
-          setEnablePopup={() => setEnableDeletePopup(false)}
+          setEnablePopup={setEnableDeletePopup}
         />
       )}
     </View>

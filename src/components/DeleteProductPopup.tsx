@@ -9,6 +9,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import firestore from "@react-native-firebase/firestore";
 import Toast from "react-native-toast-message";
+import { useAppDispatch } from "../appConfig/redux";
+import callDeleteProductApi from "../appConfig/redux/thunk/callDeleteProductApi";
 
 interface compParam {
   docId: string;
@@ -18,20 +20,15 @@ interface compParam {
 const DeleteProductPopup = ({ docId, setEnablePopup }: compParam) => {
   const { height, width } = useWindowDimensions();
   const styles = useStyles(height, width);
-
+  const dispatch = useAppDispatch();
   const handleDeleteProduct = () => {
-    firestore().collection("product_list").doc(docId).delete();
-    Toast.show({
-      type: "success",
-      text1: "Data deleted successfully.",
-    });
-    setEnablePopup();
+    dispatch(callDeleteProductApi(docId, setEnablePopup));
   };
 
   return (
     <View style={styles.popupMaincontainer}>
       <SafeAreaView>
-        <TouchableWithoutFeedback onPress={() => setEnablePopup()}>
+        <TouchableWithoutFeedback onPress={() => setEnablePopup(false)}>
           <View style={styles.mainContainer}>
             <TouchableWithoutFeedback
               onPress={(event) => event.preventDefault()}
@@ -49,7 +46,7 @@ const DeleteProductPopup = ({ docId, setEnablePopup }: compParam) => {
                     <Text style={styles.buttonText}>Delete</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => setEnablePopup()}
+                    onPress={() => setEnablePopup(false)}
                     style={styles.buttonStyle}
                   >
                     <Text style={styles.buttonText}>Cancel</Text>
@@ -143,7 +140,7 @@ const useStyles = (_height: number, _width: number) =>
       fontSize: 14,
       fontWeight: "600",
       textTransform: "capitalize",
-      marginTop:28,
-      marginBottom:60
+      marginTop: 28,
+      marginBottom: 60,
     },
   });

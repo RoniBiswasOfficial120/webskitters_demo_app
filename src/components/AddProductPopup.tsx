@@ -8,10 +8,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomTextbox from "./CustomTextBox";
-import { handleDataValidation } from "../appConfig/utils";
 import { useState } from "react";
-import firestore from "@react-native-firebase/firestore";
-import Toast from "react-native-toast-message";
+import { useAppDispatch } from "../appConfig/redux";
+import callAddProductApi from "../appConfig/redux/thunk/callAddProductApi";
 
 interface compParam {
   email: string;
@@ -21,6 +20,7 @@ interface compParam {
 const AddProductPopup = ({ email, setEnablePopup }: compParam) => {
   const { height, width } = useWindowDimensions();
   const styles = useStyles(height, width);
+  const dispatch = useAppDispatch();
   const [productName, setProductName] = useState("");
   const [productDesc, setProductDesc] = useState("");
   const [productDisc, setProductDisc] = useState("");
@@ -59,23 +59,25 @@ const AddProductPopup = ({ email, setEnablePopup }: compParam) => {
         errorName: "productDisc",
       },
     ];
-    if (!handleDataValidation(validationData, errorList, setErrorList)) {
-      firestore().collection("product_list").add({
-        desc: productDesc,
-        discount: productDisc,
-        price: productPrice,
-        name: productName,
-        email: email,
-      });
-      Toast.show({
-        type: "success",
-        text1: "Data added successfully.",
-      });
-      setProductName("");
-      setProductDesc("");
-      setProductDisc("");
-      setProductPrice("");
-    }
+    const apiData = {
+      desc: productDesc,
+      discount: productDisc,
+      price: productPrice,
+      name: productName,
+      email: email,
+    };
+    dispatch(
+      callAddProductApi(
+        validationData,
+        errorList,
+        setErrorList,
+        apiData,
+        setProductName,
+        setProductDesc,
+        setProductDisc,
+        setProductPrice
+      )
+    );
   };
 
   return (

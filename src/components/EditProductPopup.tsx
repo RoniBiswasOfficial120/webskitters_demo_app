@@ -11,6 +11,8 @@ import CustomTextbox from "./CustomTextBox";
 import { handleDataValidation } from "../appConfig/utils";
 import { useState } from "react";
 import firestore from "@react-native-firebase/firestore";
+import { useAppDispatch } from "../appConfig/redux";
+import callEditProductApi from "../appConfig/redux/thunk/callEditProductApi";
 
 interface compParam {
   docId: string;
@@ -33,6 +35,7 @@ const EditProductPopup = ({
 }: compParam) => {
   const { height, width } = useWindowDimensions();
   const styles = useStyles(height, width);
+  const dispatch = useAppDispatch();
   const [productName, setProductName] = useState(name);
   const [productDesc, setProductDesc] = useState(desc);
   const [productDisc, setProductDisc] = useState(disc);
@@ -71,16 +74,25 @@ const EditProductPopup = ({
         errorName: "productDisc",
       },
     ];
-    if (!handleDataValidation(validationData, errorList, setErrorList)) {
-      firestore().collection("product_list").doc(docId).update({
-        desc: productDesc,
-        discount: productDisc,
-        name: productName,
-        price: productPrice,
-        email: email,
-      });
-      setEnablePopup(false);
-    }
+
+    const apiData = {
+      desc: productDesc,
+      discount: productDisc,
+      name: productName,
+      price: productPrice,
+      email: email,
+    };
+
+    dispatch(
+      callEditProductApi(
+        validationData,
+        errorList,
+        setErrorList,
+        apiData,
+        docId,
+        setEnablePopup
+      )
+    );
   };
 
   return (
